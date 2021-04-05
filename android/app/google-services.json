@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "485992590055",
+    "project_id": "fingerpay-14850",
+    "storage_bucket": "fingerpay-14850.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485992590055:android:1a0009661c6993709d5042",
+        "android_client_info": {
+          "package_name": "com.thantastic.fingerpay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485992590055-5706vdhroil3mmchbuv2344ss0t2nu4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACVI-T2zTfVIZY7zQqkALKrcbCdOHp9ss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485992590055-5706vdhroil3mmchbuv2344ss0t2nu4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
