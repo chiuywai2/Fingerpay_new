@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fingerpay/src/screen/login.dart';
 import 'package:fingerpay/src/screen/signup.dart';
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({key, this.title}) : super(key: key);
@@ -94,13 +94,14 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
-      text: TextSpan(text: 'f',
-          // style: GoogleFonts.portLligatSans(
-          //   textStyle: Theme.of(context).textTheme.headline4,
-          //   fontSize: 30,
-          //   fontWeight: FontWeight.w700,
-          //   color: Colors.white,
-          // ),
+      text: TextSpan(
+          text: 'f',
+          style: GoogleFonts.portLligatSans(
+            textStyle: Theme.of(context).textTheme.headline4,
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
           children: [
             TextSpan(
               text: 'inger',

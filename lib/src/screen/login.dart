@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fingerpay/src/screen/signup.dart';
-//import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:fingerpay/src/widget/bezierContainer.dart';
 import 'package:fingerpay/src/service/auth_service.dart';
 
@@ -195,13 +195,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
-      text: TextSpan(text: 'f',
-          // style: GoogleFonts.portLligatSans(
-          //   textStyle: Theme.of(context).textTheme.headline4,
-          //   fontSize: 30,
-          //   fontWeight: FontWeight.w700,
-          //   color: Color(0xff3884e0),
-          // ),
+      text: TextSpan(
+          text: 'f',
+          style: GoogleFonts.portLligatSans(
+            textStyle: Theme.of(context).textTheme.headline4,
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: Color(0xff3884e0),
+          ),
           children: [
             TextSpan(
               text: 'inger',
