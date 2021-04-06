@@ -3,14 +3,14 @@ import 'package:fingerpay/src/service/auth_service.dart';
 import 'package:fingerpay/src/service/database_service.dart';
 import 'package:fingerpay/src/widget/provider_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'home.dart';
 
 class AcceptPay extends StatefulWidget {
   final String encrpytedtext;
   final String gesture;
 
-  const AcceptPay({Key key, this.encrpytedtext, this.gesture}) : super(key: key);
+  const AcceptPay({Key key, this.encrpytedtext, this.gesture})
+      : super(key: key);
 
   @override
   _AcceptPayState createState() => _AcceptPayState();
@@ -41,7 +41,11 @@ class _AcceptPayState extends State<AcceptPay> {
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
             ),
-            Text('Back', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white))
+            Text('Back',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white))
           ],
         ),
       ),
@@ -52,16 +56,29 @@ class _AcceptPayState extends State<AcceptPay> {
     return InkWell(
       onTap: () async {
         String uid = await AuthService().getCurrentUID();
-        await Provider.of(context).db.collection('user').doc(uid).get().then((result) {
+        await Provider.of(context)
+            .db
+            .collection('user')
+            .doc(uid)
+            .get()
+            .then((result) {
           user1.balance = result.data()['balance'].toDouble();
         });
-        await Provider.of(context).db.collection('user').doc(targetuid).get().then((result) {
+        await Provider.of(context)
+            .db
+            .collection('user')
+            .doc(targetuid)
+            .get()
+            .then((result) {
           user2.balance = result.data()['balance'].toDouble();
         });
-        await DatabaseService(uid: targetuid).updatebalance(pay ? user2.balance - amount : user2.balance + amount);
-        await DatabaseService(uid: uid).updatebalance(pay ? user1.balance + amount : user1.balance - amount);
+        await DatabaseService(uid: targetuid).updatebalance(
+            pay ? user2.balance - amount : user2.balance + amount);
+        await DatabaseService(uid: uid).updatebalance(
+            pay ? user1.balance + amount : user1.balance - amount);
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -112,12 +129,22 @@ class _AcceptPayState extends State<AcceptPay> {
                   child: RichText(
                       text: TextSpan(children: [
                     TextSpan(
-                        text: (decrpytedtext[2] == 'true' ? 'Recieve :\n' : 'Pay :\n'),
+                        text: (decrpytedtext[2] == 'true'
+                            ? 'Recieve :\n'
+                            : 'Pay :\n'),
                         style: TextStyle(color: Colors.white, fontSize: 30)),
-                    TextSpan(text: "\$ ", style: TextStyle(color: Colors.white, fontSize: 43)),
-                    TextSpan(text: decrpytedtext[1], style: TextStyle(color: Colors.white, fontSize: 50)),
-                    TextSpan(text: "\nFrom\n", style: TextStyle(color: Colors.white, fontSize: 30)),
-                    TextSpan(text: decrpytedtext[0], style: TextStyle(color: Colors.white, fontSize: 50)),
+                    TextSpan(
+                        text: "\$ ",
+                        style: TextStyle(color: Colors.white, fontSize: 43)),
+                    TextSpan(
+                        text: decrpytedtext[1],
+                        style: TextStyle(color: Colors.white, fontSize: 50)),
+                    TextSpan(
+                        text: "\nFrom\n",
+                        style: TextStyle(color: Colors.white, fontSize: 30)),
+                    TextSpan(
+                        text: decrpytedtext[0],
+                        style: TextStyle(color: Colors.white, fontSize: 50)),
                   ])),
                 ),
               ],
@@ -131,7 +158,8 @@ class _AcceptPayState extends State<AcceptPay> {
                 SizedBox(
                   height: 20,
                 ),
-                _submitButton(decrpytedtext[0], decrpytedtext[2] == 'true', double.parse(decrpytedtext[1])),
+                _submitButton(decrpytedtext[0], decrpytedtext[2] == 'true',
+                    double.parse(decrpytedtext[1])),
               ],
             ),
           ),

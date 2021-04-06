@@ -119,4 +119,41 @@ class HandGestureRecognition {
     else
       return Gestures.UNKNOWN;
   }
+
+  static String handGestureNumber(List landmarks) {
+    String detect = '';
+    if (landmarks.length == 0) return 'UNKNOWN';
+    // finger states
+    bool thumbIsOpen = HandGestureRecognition.thumbIsOpen(landmarks);
+    bool firstFingerIsOpen =
+        HandGestureRecognition.firstFingerIsOpen(landmarks);
+    bool secondFingerIsOpen =
+        HandGestureRecognition.secondFingerIsOpen(landmarks);
+    bool thirdFingerIsOpen =
+        HandGestureRecognition.thirdFingerIsOpen(landmarks);
+    bool fourthFingerIsOpen =
+        HandGestureRecognition.fourthFingerIsOpen(landmarks);
+    if (thumbIsOpen)
+      detect = detect + '1';
+    else
+      detect = detect + '0';
+
+    if (firstFingerIsOpen)
+      detect = detect + '1';
+    else
+      detect = detect + '0';
+    if (secondFingerIsOpen)
+      detect = detect + '1';
+    else
+      detect = detect + '0';
+    if (thirdFingerIsOpen)
+      detect = detect + '1';
+    else
+      detect = detect + '0';
+    if (fourthFingerIsOpen)
+      detect = detect + '1';
+    else
+      detect = detect + '0';
+    return detect;
+  }
 }

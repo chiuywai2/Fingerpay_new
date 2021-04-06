@@ -28,7 +28,7 @@ class AuthService {
       // Update the username
       await userCredential.user.updateProfile(displayName: name);
       await DatabaseService(uid: userCredential.user.uid)
-          .updateUserData(0, 'User', '00000000');
+          .updateUserData(0, name, '00000000');
       return userCredential.user.uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

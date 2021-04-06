@@ -9,8 +9,11 @@ class QRCode extends StatefulWidget {
   final double amount;
   final bool pay;
   final String gesture;
+  final String fullname;
 
-  const QRCode({Key key, this.uid, this.amount, this.pay, this.gesture}) : super(key: key);
+  const QRCode(
+      {Key key, this.uid, this.amount, this.pay, this.gesture, this.fullname})
+      : super(key: key);
 
   @override
   _QRCodeState createState() => _QRCodeState();
@@ -30,7 +33,11 @@ class _QRCodeState extends State<QRCode> {
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
             ),
-            Text('Back', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white))
+            Text('Back',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white))
           ],
         ),
       ),
@@ -43,7 +50,8 @@ class _QRCodeState extends State<QRCode> {
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -92,7 +100,15 @@ class _QRCodeState extends State<QRCode> {
                 QrImage(
                     backgroundColor: Colors.white,
                     foregroundColor: Color(0xFF3884e0),
-                    data: widget.uid + ',' + widget.amount.toString() + ',' + widget.pay.toString(),
+                    data: widget.uid +
+                        ',' +
+                        widget.amount.toString() +
+                        ',' +
+                        widget.pay.toString() +
+                        ',' +
+                        widget.gesture +
+                        ',' +
+                        widget.fullname,
                     version: QrVersions.auto,
                     size: 350.0),
               ],
