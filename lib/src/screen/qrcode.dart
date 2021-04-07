@@ -1,7 +1,6 @@
 import 'package:fingerpay/src/widget/provider_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
 import 'home.dart';
 
 class QRCode extends StatefulWidget {

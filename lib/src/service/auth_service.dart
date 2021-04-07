@@ -1,5 +1,7 @@
 import 'package:fingerpay/src/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -32,13 +34,21 @@ class AuthService {
       return userCredential.user.uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        Fluttertoast.showToast(
+          msg: 'The password provided is too weak.',
+          gravity: ToastGravity.CENTER,
+        );
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        Fluttertoast.showToast(
+          msg: 'The account already exists for that email.',
+          gravity: ToastGravity.CENTER,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: e.message,
+          gravity: ToastGravity.CENTER,
+        );
       }
-      return null;
-    } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -59,19 +69,49 @@ class AuthService {
   // Sign in with email and password
   Future<String> sinInWithEmailAndPassword(
       String email, String password) async {
+    UserCredential userCredential;
     try {
-      UserCredential userCredential = await _firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
-      print("User: $userCredential");
-      return userCredential.user.uid;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+      userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch (exception) {
+      if (exception.code == 'user-not-found') {
+        Fluttertoast.showToast(
+          msg: 'No user found for that email.',
+          gravity: ToastGravity.CENTER,
+        );
+      } else if (exception.code == 'wrong-password') {
+        Fluttertoast.showToast(
+          msg: 'Wrong password provided for that user.',
+          gravity: ToastGravity.CENTER,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: exception.message,
+          gravity: ToastGravity.CENTER,
+        );
       }
-      return null;
+    } on PlatformException catch (exception) {
+      if (exception.code == 'user-not-found') {
+        Fluttertoast.showToast(
+          msg: 'No user found for that email.',
+          gravity: ToastGravity.CENTER,
+        );
+      } else if (exception.code == 'wrong-password') {
+        Fluttertoast.showToast(
+          msg: 'Wrong password provided for that user.',
+          gravity: ToastGravity.CENTER,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: exception.message,
+          gravity: ToastGravity.CENTER,
+        );
+      }
+    } catch (error) {
+      print(error.toString());
     }
+    print("User: $userCredential");
+    return userCredential.user.uid;
   }
 
   // Sign out

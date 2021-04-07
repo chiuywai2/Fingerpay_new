@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hand_tracking_plugin/HandGestureRecognition.dart';
 import 'package:flutter_hand_tracking_plugin/flutter_hand_tracking_plugin.dart';
 import 'package:flutter_hand_tracking_plugin/gen/landmark.pb.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class PaymentScanPage extends StatefulWidget {
@@ -50,27 +51,34 @@ class _PaymentScanPageState extends State<PaymentScanPage> {
     print('-----------------');
     return InkWell(
       onTap: () async {
-        String uid = await AuthService().getCurrentUID();
-        await Provider.of(context)
-            .db
-            .collection('user')
-            .doc(uid)
-            .get()
-            .then((result) {
-          setState(() {
-            fullname = result.data()['fullname'];
+        if (percent != 100.0) {
+          Fluttertoast.showToast(
+            msg: 'Please finish the scanning',
+            gravity: ToastGravity.CENTER,
+          );
+        } else {
+          String uid = await AuthService().getCurrentUID();
+          await Provider.of(context)
+              .db
+              .collection('user')
+              .doc(uid)
+              .get()
+              .then((result) {
+            setState(() {
+              fullname = result.data()['fullname'].toString();
+            });
           });
-        });
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => QRCode(
-                      pay: widget.pay,
-                      amount: widget.amount,
-                      uid: uid,
-                      gesture: detected1 + detected2,
-                      fullname: fullname,
-                    )));
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => QRCode(
+                        pay: widget.pay,
+                        amount: widget.amount,
+                        uid: uid,
+                        gesture: detected1 + detected2,
+                        fullname: fullname,
+                      )));
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -97,17 +105,20 @@ class _PaymentScanPageState extends State<PaymentScanPage> {
           detected1 = _detected;
           setState(() {
             percent += 50;
+            scan = 'Scan the second gesture';
           });
           print(detected1);
         } else if (percent == 50.0) {
           setState(() {
             detected2 = _detected;
             percent += 50;
+            scan = 'Scan again';
           });
           print(detected2);
         } else {
           setState(() {
             percent -= 100;
+            scan = 'Scan the first gesture';
           });
         }
       },
@@ -122,7 +133,7 @@ class _PaymentScanPageState extends State<PaymentScanPage> {
                 end: Alignment.centerRight,
                 colors: [Color(0xffffffff), Color(0xffffffff)])),
         child: Text(
-          'Scan',
+          scan,
           style: TextStyle(fontSize: 20, color: Color(0xFF3884e0)),
         ),
       ),
@@ -136,6 +147,7 @@ class _PaymentScanPageState extends State<PaymentScanPage> {
   String detected2;
   double percent = 0.0;
   String fullname;
+  String scan = 'Scan the first gesture';
 
   // Color _selectedColor = Colors.black;
   // Color _pickerColor = Colors.black;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fingerpay/src/Widget/bezierContainer.dart';
 import 'package:fingerpay/src/screen/login.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fingerpay/src/widget/socialicon.dart';
 import 'package:fingerpay/src/service/auth_service.dart';
@@ -126,10 +127,17 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _submitButton() {
     return GestureDetector(
       onTap: () async {
-        String uid = await AuthService()
-            .createUserWithEmailAndPassword(_email, _password, _username);
-        print("Singed up with New ID $uid");
-        Navigator.pop(context);
+        if (_username != null && _email != null && _password != null) {
+          String uid = await AuthService()
+              .createUserWithEmailAndPassword(_email, _password, _username);
+          print("Singed up with New ID $uid");
+          Navigator.pop(context);
+        } else {
+          Fluttertoast.showToast(
+            msg: "Username, Email or Password cannot be null",
+            gravity: ToastGravity.CENTER,
+          );
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

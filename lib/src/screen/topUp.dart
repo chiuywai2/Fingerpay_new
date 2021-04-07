@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:fingerpay/src/widget/cal_button.dart';
 import 'confirmTopUp.dart';
@@ -143,12 +143,12 @@ class _TopUpPageState extends State<TopUpPage> {
                     padding: const EdgeInsets.only(right: 12),
                     child: Text(
                       _history,
-                      // style: GoogleFonts.rubik(
-                      //   textStyle: TextStyle(
-                      //     fontSize: 24,
-                      //     color: Color(0xFF545F61),
-                      //   ),
-                      // ),
+                      style: GoogleFonts.rubik(
+                        textStyle: TextStyle(
+                          fontSize: 24,
+                          color: Color(0xFF545F61),
+                        ),
+                      ),
                     ),
                   ),
                   alignment: Alignment(1.0, 1.0),
@@ -158,12 +158,12 @@ class _TopUpPageState extends State<TopUpPage> {
                     padding: const EdgeInsets.all(12),
                     child: Text(
                       _expression,
-                      // style: GoogleFonts.rubik(
-                      //   textStyle: TextStyle(
-                      //     fontSize: 48,
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
+                      style: GoogleFonts.rubik(
+                        textStyle: TextStyle(
+                          fontSize: 48,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   alignment: Alignment(1.0, 1.0),
