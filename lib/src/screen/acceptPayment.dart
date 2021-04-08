@@ -61,7 +61,6 @@ class _AcceptPayState extends State<AcceptPay> {
             .get()
             .then((result) {
           user1.balance = result.data()['balance'].toDouble();
-          user1.fullname = result.data()['fullname'].toString();
         });
         await Provider.of(context)
             .db
@@ -70,14 +69,13 @@ class _AcceptPayState extends State<AcceptPay> {
             .get()
             .then((result) {
           user2.balance = result.data()['balance'].toDouble();
-          user2.fullname = result.data()['fullname'].toString();
         });
         await DatabaseService(uid: targetuid).updatebalance(
             pay ? user2.balance - amount : user2.balance + amount);
         await DatabaseService(uid: uid).updatebalance(
             pay ? user1.balance + amount : user1.balance - amount);
-        await DatabaseService(uid: uid).transactionRecord(targetuid,
-            user2.fullname, user1.fullname, amount, DateTime.now(), pay);
+        await DatabaseService(uid: uid)
+            .transactionRecord(targetuid, amount, DateTime.now(), pay);
         Navigator.pop(context);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));

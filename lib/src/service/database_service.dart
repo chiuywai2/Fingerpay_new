@@ -22,8 +22,8 @@ class DatabaseService {
     });
   }
 
-  Future transactionRecord(String partnerUid, String partnerName,
-      String selfName, double amount, DateTime now, bool pay) async {
+  Future transactionRecord(
+      String partnerUid, double amount, DateTime now, bool pay) async {
     if (pay) {
       await userCollection
           .doc(uid)
@@ -31,7 +31,7 @@ class DatabaseService {
           .doc(DateFormat('yyyyMMddHHmm').format(now))
           .set({
         'amount': amount,
-        'partner': partnerName,
+        'partner': partnerUid,
         'Time': now,
       });
       await userCollection
@@ -40,36 +40,26 @@ class DatabaseService {
           .doc(DateFormat('yyyyMMddHHmm').format(now))
           .set({
         'amount': -amount,
-        'partner': selfName,
+        'partner': uid,
         'Time': now,
       });
     } else {
       await userCollection
           .doc(uid)
           .collection('transaction')
-          .doc(now.year.toString() +
-              now.month.toString() +
-              now.day.toString() +
-              now.hour.toString() +
-              now.minute.toString() +
-              now.second.toString())
+          .doc(DateFormat('yyyyMMddHHmm').format(now))
           .set({
         'amount': -amount,
-        'partner': partnerName,
+        'partner': partnerUid,
         'Time': now,
       });
       await userCollection
           .doc(partnerUid)
           .collection('transaction')
-          .doc(now.year.toString() +
-              now.month.toString() +
-              now.day.toString() +
-              now.hour.toString() +
-              now.minute.toString() +
-              now.second.toString())
+          .doc(DateFormat('yyyyMMddHHmm').format(now))
           .set({
         'amount': amount,
-        'partner': selfName,
+        'partner': uid,
         'Time': now,
       });
     }
