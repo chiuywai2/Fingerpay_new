@@ -76,7 +76,6 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
               gravity: ToastGravity.CENTER,
             );
             Navigator.pop(context);
-            Navigator.pop(context);
           }
         } else {
           await Navigator.push(
@@ -112,17 +111,20 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
           detected1 = _detected;
           setState(() {
             percent += 50;
+            scan = 'Scan the second gesture';
           });
           print(detected1);
         } else if (percent == 50.0) {
           setState(() {
             detected2 = _detected;
             percent += 50;
+            scan = 'Scan again';
           });
           print(detected2);
         } else {
           setState(() {
             percent -= 100;
+            scan = 'Scan the first gesture';
           });
         }
       },
@@ -137,7 +139,7 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
                 end: Alignment.centerRight,
                 colors: [Color(0xffffffff), Color(0xffffffff)])),
         child: Text(
-          'Scan',
+          scan,
           style: TextStyle(fontSize: 20, color: Color(0xFF3884e0)),
         ),
       ),
@@ -151,6 +153,7 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
   String detected2;
   double percent = 0.0;
   int counter = 3;
+  String scan = 'Scan the first gesture';
 
   // Color _selectedColor = Colors.black;
   // Color _pickerColor = Colors.black;
@@ -286,7 +289,8 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  _submitButton(decrpytedtext[3], detected1 + detected2),
+                  _submitButton(decrpytedtext[3],
+                      detected1.toString() + detected2.toString()),
                 ],
               ),
             ),

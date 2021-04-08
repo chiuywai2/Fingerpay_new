@@ -85,6 +85,8 @@ class _QRCodeState extends State<QRCode> {
   }
 
   Widget qr(context, snapshot) {
+    String displayname =
+        widget.fullname == 'null' ? 'Anonymous User' : widget.fullname;
     return Scaffold(
       backgroundColor: Color(0xFF3884e0),
       body: Stack(
@@ -107,7 +109,7 @@ class _QRCodeState extends State<QRCode> {
                         ',' +
                         widget.gesture +
                         ',' +
-                        widget.fullname,
+                        displayname,
                     version: QrVersions.auto,
                     size: 350.0),
               ],
