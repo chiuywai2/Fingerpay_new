@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hand_tracking_plugin/HandGestureRecognition.dart';
 import 'package:flutter_hand_tracking_plugin/flutter_hand_tracking_plugin.dart';
 import 'package:flutter_hand_tracking_plugin/gen/landmark.pb.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'acceptPayment.dart';
 
@@ -16,6 +17,14 @@ class AcceptScanPage extends StatefulWidget {
 }
 
 class _AcceptScanPageState extends State<AcceptScanPage> {
+  List<String> getdata(String encrpytedtext) {
+    List<String> decryptedtext;
+
+    decryptedtext = encrpytedtext.split(',');
+
+    return decryptedtext;
+  }
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -40,20 +49,43 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
     );
   }
 
-  Widget _submitButton(String gesture) {
-    // print('-----------------');
-    // print(_gesture);
-    // print(gesture);
-    // print('-----------------');
+  Widget _submitButton(String detectedGesture, String gesture) {
+    print('-----------------');
+    print(_gesture);
+    print(gesture);
+    print('-----------------');
     return InkWell(
       onTap: () async {
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AcceptPay(
-                      encrpytedtext: widget.encrpytedtext,
-                      gesture: _detected,
-                    )));
+        if (percent != 100.0) {
+          Fluttertoast.showToast(
+            msg: 'Please finish the scanning',
+            gravity: ToastGravity.CENTER,
+          );
+        } else if (detectedGesture != gesture) {
+          if (counter > 1) {
+            setState(() {
+              counter -= 1;
+            });
+            Fluttertoast.showToast(
+              msg: 'Wrong gesture, still have ${counter.toString()} chance',
+              gravity: ToastGravity.CENTER,
+            );
+          } else {
+            Fluttertoast.showToast(
+              msg: 'You have no chance left',
+              gravity: ToastGravity.CENTER,
+            );
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }
+        } else {
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AcceptPay(
+                        encrpytedtext: widget.encrpytedtext,
+                      )));
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -118,6 +150,7 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
   String detected1;
   String detected2;
   double percent = 0.0;
+  int counter = 3;
 
   // Color _selectedColor = Colors.black;
   // Color _pickerColor = Colors.black;
@@ -201,6 +234,7 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> decrpytedtext = getdata(widget.encrpytedtext);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -252,7 +286,7 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  _submitButton(_gesture.toString()),
+                  _submitButton(decrpytedtext[3], detected1 + detected2),
                 ],
               ),
             ),

@@ -7,10 +7,8 @@ import 'home.dart';
 
 class AcceptPay extends StatefulWidget {
   final String encrpytedtext;
-  final String gesture;
 
-  const AcceptPay({Key key, this.encrpytedtext, this.gesture})
-      : super(key: key);
+  const AcceptPay({Key key, this.encrpytedtext}) : super(key: key);
 
   @override
   _AcceptPayState createState() => _AcceptPayState();
@@ -143,7 +141,7 @@ class _AcceptPayState extends State<AcceptPay> {
                         text: "\nFrom\n",
                         style: TextStyle(color: Colors.white, fontSize: 30)),
                     TextSpan(
-                        text: decrpytedtext[0],
+                        text: decrpytedtext[4],
                         style: TextStyle(color: Colors.white, fontSize: 50)),
                   ])),
                 ),
