@@ -1,20 +1,41 @@
+import 'package:fingerpay/src/service/database_service.dart';
 import 'package:fingerpay/src/widget/profileIcon.dart';
 import 'package:flutter/material.dart';
 import 'package:fingerpay/src/common.dart';
 import 'package:intl/intl.dart';
 
 class HistoryItem extends StatefulWidget {
-  final String iconPath;
   final double money;
-  final String name;
   final DateTime date;
+  final String uid;
 
   @override
-  HistoryItem({this.iconPath, this.money, this.name, this.date});
+  HistoryItem({this.uid, this.money, this.date});
   State<StatefulWidget> createState() => _HistoryItem();
 }
 
 class _HistoryItem extends State<HistoryItem> {
+  String name;
+  String icnonPath;
+
+  String _getUserName(String uid) {
+    DatabaseService(uid: uid).getUserName(uid).then((result) {
+      setState(() {
+        name = result;
+      });
+    });
+    return name;
+  }
+
+  String _getIconPath(String uid) {
+    DatabaseService(uid: uid).getIconpath(uid).then((result) {
+      setState(() {
+        icnonPath = result;
+      });
+    });
+    return icnonPath;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -22,11 +43,16 @@ class _HistoryItem extends State<HistoryItem> {
         showHistory(context);
       },
       leading: ProfileIcon(
-        image: widget.iconPath,
+        image: _getIconPath(widget.uid) == null
+            ? 'anonymous.jpg'
+            : _getIconPath(widget.uid),
       ),
       title: RichText(
         text: TextSpan(children: [
-          TextSpan(text: widget.name + '\n'),
+          TextSpan(
+              text: _getUserName(widget.uid) == null
+                  ? 'Anonymous User \n'
+                  : _getUserName(widget.uid) + '\n'),
           TextSpan(
               text: widget.money < 0
                   ? 'Money Sent - ' +
@@ -62,8 +88,10 @@ class _HistoryItem extends State<HistoryItem> {
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
                         radius: 25,
-                        backgroundImage:
-                            AssetImage("assets/images/" + widget.iconPath),
+                        backgroundImage: AssetImage(
+                            _getIconPath(widget.uid) == null
+                                ? 'assets/images/anonymous.jpg'
+                                : _getIconPath(widget.uid)),
                       ),
                     ),
                   ],
@@ -71,7 +99,9 @@ class _HistoryItem extends State<HistoryItem> {
                 Container(
                   alignment: Alignment.center,
                   child: Text(
-                    widget.name,
+                    _getUserName(widget.uid) == null
+                        ? 'Anonymous User \n'
+                        : _getUserName(widget.uid),
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),

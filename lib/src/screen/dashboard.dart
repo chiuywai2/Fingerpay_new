@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fingerpay/src/models/user.dart';
 import 'package:fingerpay/src/screen/topUp.dart';
 import 'package:fingerpay/src/widget/profileIcon.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fingerpay/src/widget/topbar.dart';
 import 'package:fingerpay/src/common.dart';
@@ -35,6 +37,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget dashboard(context, snapshot) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user1 = auth.currentUser;
+    final uid1 = user1.uid;
     _getProfileData() async {
       final uid = await Provider.of(context).auth.getCurrentUID();
       await Provider.of(context)
@@ -46,6 +51,12 @@ class _DashboardState extends State<Dashboard> {
         user.balance = result.data()['balance'].toDouble();
       });
     }
+
+    // Future<QuerySnapshot> _printHistory() async {
+    //   final uid = await Provider.of(context).auth.getCurrentUID();
+    //   return await DatabaseService(uid: uid).getRecord();
+    //   // transaction.docs.forEach((DocumentSnapshot doc) {});
+    // }
 
     return Scaffold(
       body: Container(
@@ -359,59 +370,36 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
                 Container(
-                  height: 325,
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: AlwaysScrollableScrollPhysics(),
-                    children: <Widget>[
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p2.jpg',
-                          money: -200,
-                          name: 'William',
-                          date: DateTime.parse("2020-12-20 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                      HistoryItem(
-                          iconPath: 'p3.jpg',
-                          money: -430,
-                          name: 'Kenny Chiu',
-                          date: DateTime.parse("2020-12-24 20:18:00")),
-                    ],
-                  ),
-                ),
+                    height: 325,
+                    child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("user")
+                            .doc(uid1)
+                            .collection('transaction')
+                            .orderBy('Time', descending: true)
+                            .limit(10)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Text('No Transaction');
+                          } else {
+                            return ListView(
+                              shrinkWrap: true,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              children: new List.generate(
+                                snapshot.data.docs.length,
+                                (index) => new HistoryItem(
+                                    money: snapshot.data.docs[index]['amount']
+                                        .toDouble(),
+                                    uid: snapshot.data.docs[index]['partner'],
+                                    date: DateTime.parse(snapshot
+                                        .data.docs[index]['Time']
+                                        .toDate()
+                                        .toString())),
+                              ),
+                            );
+                          }
+                        })),
               ],
             ),
           )

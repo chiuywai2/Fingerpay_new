@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_admin/firebase_admin.dart';
 
 class DatabaseService {
   final String uid;
@@ -63,5 +64,25 @@ class DatabaseService {
         'Time': now,
       });
     }
+  }
+
+  // Future<String> getUserName(String uid) async {
+  //   final user = await FirebaseAdmin.instance.app().auth().getUser(uid);
+  //   final name = user.displayName;
+  //   return name;
+  // }
+  //
+  Future<String> getUserName(String _uid) async {
+    String name;
+    await userCollection.doc(_uid).get().then((snapshot) {
+      name = snapshot.data()['fullname'].toString();
+    });
+    return name;
+  }
+
+  Future<String> getIconpath(String uid) async {
+    final user = await FirebaseAdmin.instance.app().auth().getUser(uid);
+    final iconPath = user.photoUrl;
+    return iconPath;
   }
 }
