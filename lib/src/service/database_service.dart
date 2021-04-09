@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_admin/firebase_admin.dart';
 
 class DatabaseService {
   final String uid;
@@ -80,9 +79,9 @@ class DatabaseService {
     return name;
   }
 
-  Future<String> getIconpath(String uid) async {
-    final user = await FirebaseAdmin.instance.app().auth().getUser(uid);
-    final iconPath = user.photoUrl;
-    return iconPath;
-  }
+  // Future<String> getIconpath(String uid) async {
+  //   final user = await FirebaseAdmin.instance.app().auth().getUser(uid);
+  //   final iconPath = user.photoUrl;
+  //   return iconPath;
+  // }
 }

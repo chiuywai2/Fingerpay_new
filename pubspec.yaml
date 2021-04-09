@@ -46,7 +46,6 @@ dependencies:
   barcode_scan: ^2.0.1
   percent_indicator: ^3.0.1
   fluttertoast: ^8.0.3
-  firebase_admin: ^0.1.4
   
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

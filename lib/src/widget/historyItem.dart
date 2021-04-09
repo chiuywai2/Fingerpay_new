@@ -27,14 +27,14 @@ class _HistoryItem extends State<HistoryItem> {
     return name;
   }
 
-  String _getIconPath(String uid) {
-    DatabaseService(uid: uid).getIconpath(uid).then((result) {
-      setState(() {
-        icnonPath = result;
-      });
-    });
-    return icnonPath;
-  }
+  // String _getIconPath(String uid) {
+  //   DatabaseService(uid: uid).getIconpath(uid).then((result) {
+  //     setState(() {
+  //       icnonPath = result;
+  //     });
+  //   });
+  //   return icnonPath;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +43,7 @@ class _HistoryItem extends State<HistoryItem> {
         showHistory(context);
       },
       leading: ProfileIcon(
-        image: _getIconPath(widget.uid) == null
-            ? 'anonymous.jpg'
-            : _getIconPath(widget.uid),
+        image: 'anonymous.jpg',
       ),
       title: RichText(
         text: TextSpan(children: [
@@ -88,10 +86,8 @@ class _HistoryItem extends State<HistoryItem> {
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
                         radius: 25,
-                        backgroundImage: AssetImage(
-                            _getIconPath(widget.uid) == null
-                                ? 'assets/images/anonymous.jpg'
-                                : _getIconPath(widget.uid)),
+                        backgroundImage:
+                            AssetImage('assets/images/anonymous.jpg'),
                       ),
                     ),
                   ],
