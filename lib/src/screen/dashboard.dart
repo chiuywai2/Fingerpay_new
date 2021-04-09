@@ -40,6 +40,7 @@ class _DashboardState extends State<Dashboard> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user1 = auth.currentUser;
     final uid1 = user1.uid;
+
     _getProfileData() async {
       final uid = await Provider.of(context).auth.getCurrentUID();
       await Provider.of(context)
@@ -51,12 +52,6 @@ class _DashboardState extends State<Dashboard> {
         user.balance = result.data()['balance'].toDouble();
       });
     }
-
-    // Future<QuerySnapshot> _printHistory() async {
-    //   final uid = await Provider.of(context).auth.getCurrentUID();
-    //   return await DatabaseService(uid: uid).getRecord();
-    //   // transaction.docs.forEach((DocumentSnapshot doc) {});
-    // }
 
     return Scaffold(
       body: Container(

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fingerpay/src/widget/provider_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'home.dart';
+import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 
 class QRCode extends StatefulWidget {
   final String uid;
@@ -19,6 +21,38 @@ class QRCode extends StatefulWidget {
 }
 
 class _QRCodeState extends State<QRCode> {
+  String encrpyText;
+  String collectionid;
+
+  initState() {
+    super.initState();
+    encrypt(widget.uid +
+        ',' +
+        widget.amount.toString() +
+        ',' +
+        widget.pay.toString() +
+        ',' +
+        widget.gesture +
+        ',' +
+        (widget.fullname == 'null' ? 'Anonymous User' : widget.fullname));
+  }
+
+  Future<void> encrypt(String encrypttext) async {
+    PlatformStringCryptor cryptor = PlatformStringCryptor();
+    final key = await cryptor.generateRandomKey();
+    final encrypted = await cryptor.encrypt(encrypttext, key);
+    await FirebaseFirestore.instance.collection("keys").add({
+      "key": key,
+    }).then((value) {
+      setState(() {
+        collectionid = value.id;
+      });
+    });
+    setState(() {
+      encrpyText = encrypted;
+    });
+  }
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -85,8 +119,6 @@ class _QRCodeState extends State<QRCode> {
   }
 
   Widget qr(context, snapshot) {
-    String displayname =
-        widget.fullname == 'null' ? 'Anonymous User' : widget.fullname;
     return Scaffold(
       backgroundColor: Color(0xFF3884e0),
       body: Stack(
@@ -101,15 +133,7 @@ class _QRCodeState extends State<QRCode> {
                 QrImage(
                     backgroundColor: Colors.white,
                     foregroundColor: Color(0xFF3884e0),
-                    data: widget.uid +
-                        ',' +
-                        widget.amount.toString() +
-                        ',' +
-                        widget.pay.toString() +
-                        ',' +
-                        widget.gesture +
-                        ',' +
-                        displayname,
+                    data: collectionid + ',' + encrpyText,
                     version: QrVersions.auto,
                     size: 350.0),
               ],

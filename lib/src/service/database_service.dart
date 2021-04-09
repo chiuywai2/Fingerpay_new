@@ -77,12 +77,6 @@ class DatabaseService {
     }
   }
 
-  // Future<String> getUserName(String uid) async {
-  //   final user = await FirebaseAdmin.instance.app().auth().getUser(uid);
-  //   final name = user.displayName;
-  //   return name;
-  // }
-  //
   Future<String> getUserName(String _uid) async {
     String name;
     await userCollection.doc(_uid).get().then((snapshot) {
@@ -90,10 +84,4 @@ class DatabaseService {
     });
     return name;
   }
-
-  // Future<String> getIconpath(String uid) async {
-  //   final user = await FirebaseAdmin.instance.app().auth().getUser(uid);
-  //   final iconPath = user.photoUrl;
-  //   return iconPath;
-  // }
 }

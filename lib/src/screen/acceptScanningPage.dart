@@ -1,8 +1,10 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hand_tracking_plugin/HandGestureRecognition.dart';
 import 'package:flutter_hand_tracking_plugin/flutter_hand_tracking_plugin.dart';
 import 'package:flutter_hand_tracking_plugin/gen/landmark.pb.dart';
+import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'acceptPayment.dart';
@@ -17,6 +19,32 @@ class AcceptScanPage extends StatefulWidget {
 }
 
 class _AcceptScanPageState extends State<AcceptScanPage> {
+  String decryptKey;
+  String decryptedText;
+  initState() {
+    super.initState();
+    decrypt(widget.encrpytedtext);
+  }
+
+  Future<void> decrypt(String encrypttext) async {
+    String encrypttext1 = encrypttext.split(',')[0];
+    String encrypttext2 = encrypttext.split(',')[1];
+    PlatformStringCryptor cryptor = PlatformStringCryptor();
+    await FirebaseFirestore.instance
+        .collection("keys")
+        .doc(encrypttext1)
+        .get()
+        .then((snapshot) {
+      setState(() {
+        decryptKey = snapshot.data()['key'];
+      });
+    });
+    final decrypted = await cryptor.decrypt(encrypttext2, decryptKey);
+    setState(() {
+      decryptedText = decrypted;
+    });
+  }
+
   List<String> getdata(String encrpytedtext) {
     List<String> decryptedtext;
 
@@ -82,7 +110,7 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => AcceptPay(
-                        encrpytedtext: widget.encrpytedtext,
+                        encrpytedtext: decryptedText,
                       )));
         }
       },
@@ -237,7 +265,7 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> decrpytedtext = getdata(widget.encrpytedtext);
+    List<String> decrpytedtext = getdata(decryptedText);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

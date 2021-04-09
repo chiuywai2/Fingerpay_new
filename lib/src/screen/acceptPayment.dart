@@ -119,7 +119,7 @@ class _AcceptPayState extends State<AcceptPay> {
       body: Stack(
         children: <Widget>[
           Container(
-            alignment: Alignment.center,
+            alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
