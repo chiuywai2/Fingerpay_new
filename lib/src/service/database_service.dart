@@ -16,6 +16,18 @@ class DatabaseService {
     });
   }
 
+  Future updateUserName(String fullname) async {
+    return await userCollection.doc(uid).update({
+      'fullname': fullname,
+    });
+  }
+
+  Future updateUserPhone(String phone) async {
+    return await userCollection.doc(uid).update({
+      'phone': phone,
+    });
+  }
+
   Future updatebalance(double balance) async {
     return await userCollection.doc(uid).update({
       'balance': balance,

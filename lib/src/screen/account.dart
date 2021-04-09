@@ -1,3 +1,4 @@
+import 'package:fingerpay/src/service/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fingerpay/src/widget/topbar.dart';
 import 'package:fingerpay/src/common.dart';
@@ -29,6 +30,8 @@ class _AccountState extends State<Account> {
 
   Widget displayUserInformation(context, snapshot) {
     final authData = snapshot.data;
+    String _fullname;
+    String _phone;
 
     _getProfileData() async {
       final uid = await Provider.of(context).auth.getCurrentUID();
@@ -40,8 +43,126 @@ class _AccountState extends State<Account> {
           .then((result) {
         user.balance = result.data()['balance'].toDouble();
         user.fullname = result.data()['fullname'];
+        _fullname = result.data()['fullname'];
         user.phone = result.data()['phone'];
+        _phone = result.data()['phone'];
       });
+    }
+
+    updateName() async {
+      final uid = await Provider.of(context).auth.getCurrentUID();
+      DatabaseService(uid: uid).updateUserName(_fullname);
+    }
+
+    updatePhone() async {
+      final uid = await Provider.of(context).auth.getCurrentUID();
+      DatabaseService(uid: uid).updateUserPhone(_phone);
+    }
+
+    Widget buildTextField(
+        String labelText, String placeholder, bool isPasswordTextField) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 25.0, left: 8.0, right: 8.0),
+        child: TextField(
+          enabled: false,
+          obscureText: isPasswordTextField ? showPassword : false,
+          decoration: InputDecoration(
+              suffixIcon: isPasswordTextField
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.grey,
+                      ),
+                    )
+                  : null,
+              contentPadding: EdgeInsets.only(bottom: 3),
+              labelText: labelText,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintText: placeholder,
+              hintStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+        ),
+      );
+    }
+
+    Widget buildNameField(
+        String labelText, String placeholder, bool isPasswordTextField) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 25.0, left: 8.0, right: 8.0),
+        child: TextFormField(
+          onChanged: (value) {
+            _fullname = value;
+          },
+          obscureText: isPasswordTextField ? showPassword : false,
+          decoration: InputDecoration(
+              suffixIcon: isPasswordTextField
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.grey,
+                      ),
+                    )
+                  : null,
+              contentPadding: EdgeInsets.only(bottom: 3),
+              labelText: labelText,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintText: placeholder,
+              hintStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+        ),
+      );
+    }
+
+    Widget buildPhoneField(
+        String labelText, String placeholder, bool isPasswordTextField) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 25.0, left: 8.0, right: 8.0),
+        child: TextFormField(
+          onChanged: (value) {
+            _phone = value;
+          },
+          obscureText: isPasswordTextField ? showPassword : false,
+          decoration: InputDecoration(
+              suffixIcon: isPasswordTextField
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.grey,
+                      ),
+                    )
+                  : null,
+              contentPadding: EdgeInsets.only(bottom: 3),
+              labelText: labelText,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintText: placeholder,
+              hintStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+        ),
+      );
     }
 
     return Scaffold(
@@ -153,22 +274,22 @@ class _AccountState extends State<Account> {
                   SizedBox(
                     height: 35,
                   ),
+                  FutureBuilder(
+                      future: _getProfileData(),
+                      builder: (context, snapshot) {
+                        return buildNameField(
+                            "Full Name", "${_fullname ?? 'Try'}", false);
+                      }),
+                  FutureBuilder(
+                      future: _getProfileData(),
+                      builder: (context, snapshot) {
+                        return buildPhoneField(
+                            "Phone Number", "${_phone ?? '12345678'}", false);
+                      }),
                   buildTextField("User Name",
                       "${authData.displayName ?? 'Anonymous'}", false),
-                  FutureBuilder(
-                      future: _getProfileData(),
-                      builder: (context, snapshot) {
-                        return buildTextField(
-                            "Full Name", "${user.fullname ?? 'Try'}", false);
-                      }),
                   buildTextField(
                       "E-mail", "${authData.email ?? 'Anonymous'}", false),
-                  FutureBuilder(
-                      future: _getProfileData(),
-                      builder: (context, snapshot) {
-                        return buildTextField("Phone Number",
-                            "${user.phone ?? '12345678'}", false);
-                      }),
                   buildTextField("Password", "********", true),
                   SizedBox(
                     height: 10,
@@ -202,7 +323,14 @@ class _AccountState extends State<Account> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (_phone != user.phone) {
+                              updatePhone();
+                            }
+                            if (_fullname != user.fullname) {
+                              updateName();
+                            }
+                          },
                           child: Text(
                             "SAVE",
                             style: TextStyle(
@@ -219,39 +347,6 @@ class _AccountState extends State<Account> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 25.0, left: 8.0, right: 8.0),
-      child: TextField(
-        obscureText: isPasswordTextField ? showPassword : false,
-        decoration: InputDecoration(
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),
-                  )
-                : null,
-            contentPadding: EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            )),
       ),
     );
   }
