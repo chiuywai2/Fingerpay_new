@@ -68,6 +68,7 @@ class _PaymentScanPageState extends State<PaymentScanPage> {
               fullname = result.data()['fullname'].toString();
             });
           });
+          Navigator.pop(context);
           await Navigator.push(
               context,
               MaterialPageRoute(

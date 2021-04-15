@@ -3,6 +3,7 @@ import 'package:fingerpay/src/service/auth_service.dart';
 import 'package:fingerpay/src/service/database_service.dart';
 import 'package:fingerpay/src/widget/provider_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'home.dart';
 
 class AcceptPay extends StatefulWidget {
@@ -70,15 +71,27 @@ class _AcceptPayState extends State<AcceptPay> {
             .then((result) {
           user2.balance = result.data()['balance'].toDouble();
         });
-        await DatabaseService(uid: targetuid).updatebalance(
-            pay ? user2.balance - amount : user2.balance + amount);
-        await DatabaseService(uid: uid).updatebalance(
-            pay ? user1.balance + amount : user1.balance - amount);
-        await DatabaseService(uid: uid)
-            .transactionRecord(targetuid, amount, DateTime.now(), pay);
-        Navigator.pop(context);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+        if (pay && user2.balance < amount) {
+          Fluttertoast.showToast(
+            msg: "Payer dont have enough balance, please topup",
+            gravity: ToastGravity.CENTER,
+          );
+        } else if (!pay && user1.balance < amount) {
+          Fluttertoast.showToast(
+            msg: "Dont have enough balance, please topup",
+            gravity: ToastGravity.CENTER,
+          );
+        } else {
+          await DatabaseService(uid: targetuid).updatebalance(
+              pay ? user2.balance - amount : user2.balance + amount);
+          await DatabaseService(uid: uid).updatebalance(
+              pay ? user1.balance + amount : user1.balance - amount);
+          await DatabaseService(uid: uid)
+              .transactionRecord(targetuid, amount, DateTime.now(), pay);
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

@@ -1,6 +1,7 @@
 import 'package:fingerpay/src/screen/paymentScanningPage.dart';
 import 'package:fingerpay/src/widget/cal_button.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -46,15 +47,30 @@ class _CreatePaymentPageState extends State<CreatePaymentPage> {
     return InkWell(
       onTap: () {
         if (_expression == '') {
-          _expression = '0';
+          Fluttertoast.showToast(
+            msg: "Please input a number",
+            gravity: ToastGravity.CENTER,
+          );
+        } else if (double.parse(_expression) <= 0) {
+          Fluttertoast.showToast(
+            msg: "Value rejected",
+            gravity: ToastGravity.CENTER,
+          );
+        } else if (_pay && double.parse(_expression) > widget.balance) {
+          Fluttertoast.showToast(
+            msg: "Not enough balance, please top up",
+            gravity: ToastGravity.CENTER,
+          );
+        } else {
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PaymentScanPage(
+                        pay: _pay,
+                        amount: double.parse(_expression),
+                      )));
         }
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PaymentScanPage(
-                      pay: _pay,
-                      amount: double.parse(_expression),
-                    )));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

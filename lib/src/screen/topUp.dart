@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:fingerpay/src/widget/cal_button.dart';
@@ -44,15 +45,24 @@ class _TopUpPageState extends State<TopUpPage> {
     return InkWell(
       onTap: () {
         if (_expression == '') {
-          _expression = '0';
+          Fluttertoast.showToast(
+            msg: "Please input a number",
+            gravity: ToastGravity.CENTER,
+          );
+        } else if (double.parse(_expression) <= 0) {
+          Fluttertoast.showToast(
+            msg: "Value rejected",
+            gravity: ToastGravity.CENTER,
+          );
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ConfirmTopUp(
+                        balance: widget.balance,
+                        topUpValue: double.parse(_expression),
+                      )));
         }
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ConfirmTopUp(
-                      balance: widget.balance,
-                      topUpValue: double.parse(_expression),
-                    )));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
