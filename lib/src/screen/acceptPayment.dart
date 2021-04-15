@@ -89,8 +89,10 @@ class _AcceptPayState extends State<AcceptPay> {
           await DatabaseService(uid: uid)
               .transactionRecord(targetuid, amount, DateTime.now(), pay);
           Navigator.pop(context);
+          Navigator.pop(context);
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => HomePage()));
+          Navigator.pop(context);
         }
       },
       child: Container(

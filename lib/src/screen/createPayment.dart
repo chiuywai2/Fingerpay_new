@@ -62,7 +62,6 @@ class _CreatePaymentPageState extends State<CreatePaymentPage> {
             gravity: ToastGravity.CENTER,
           );
         } else {
-          Navigator.pop(context);
           Navigator.push(
               context,
               MaterialPageRoute(

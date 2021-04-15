@@ -85,6 +85,7 @@ class _QRCodeState extends State<QRCode> {
         Navigator.pop(context);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.pop(context);
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

@@ -103,7 +103,6 @@ class _AcceptScanPageState extends State<AcceptScanPage> {
               msg: 'You have no chance left',
               gravity: ToastGravity.CENTER,
             );
-            Navigator.pop(context);
           }
         } else {
           await Navigator.push(
